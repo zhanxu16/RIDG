@@ -61,7 +61,7 @@ https://github.com/XavierJiezou/PMAA
 
 The pretrained RIDG-Diff model can be downloaded from Baidu Netdisk:
 
-- Link: https://pan.baidu.com/s/1em7CGWuR7hS5gxpDl5W0ig?
+- Link: https://pan.baidu.com/s/1em7CGWuR7hS5gxpDl5W0ig?pwd=bv6e
 - Extraction code: `bv6e`
 
 ---
