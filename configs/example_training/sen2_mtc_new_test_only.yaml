@@ -5,7 +5,7 @@
 # Before testing, place:
 #   1) the trained checkpoint at ./checkpoints/ridg_diff_sen2_mtc_new.ckpt
 #   2) the Sen2_MTC_New test split under ./data/Sen2_MTC/test
-#   3) the precomputed composite references under
+#   3) the composite references under
 #      ./data/Sen2_MTC/test/selector_soft_generated
 
 model:
