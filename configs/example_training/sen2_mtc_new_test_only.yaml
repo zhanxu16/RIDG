@@ -159,7 +159,7 @@ data:
     num_workers: 2
     wrap: true
 
-    # Test split only.
+
     test:
       target: sgm.data.sen2_mtc_new.sen2_mtc_new.Sen2_MTC_New_Multi
       params:
@@ -174,8 +174,7 @@ data:
 
 
 lightning:
-  # Keep the image logger disabled so test-only execution does not
-  # invoke the visualization callback from main.py.
+
   callbacks:
     image_logger:
       target: main.ImageLogger
