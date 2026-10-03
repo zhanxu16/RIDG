@@ -22,7 +22,7 @@ model:
     use_flash_attn2: false
 
     # Public checkpoint path. Replace this path if the checkpoint is stored elsewhere.
-    ckpt_path: /media/zx/data2/zx/EMRDM-main111/ours_ckpt/ournew/sen_new.ckpt
+    ckpt_path: ./sen_new.ckpt
 
     sigma_st_config:
       target: sgm.modules.diffusionmodules.sigma2st.EDMSigma2St
@@ -163,8 +163,8 @@ data:
     test:
       target: sgm.data.sen2_mtc_new.sen2_mtc_new.Sen2_MTC_New_Multi
       params:
-        data_root: "/media/zx/data2/zx/EMRDM-main/data/Sen2_MTC/test"
-        selector_soft_root: "/media/zx/data2/zx/EMRDM-main/data/Sen2_MTC/test/selector_soft_generated"
+        data_root: "./data/Sen2_MTC/test"
+        selector_soft_root: "./data/Sen2_MTC/test/selector_soft_generated"
         use_ir: true
         mode: test
         selector_soft_mode: condition_only_masked_residual_hint
