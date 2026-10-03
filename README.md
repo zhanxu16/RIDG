@@ -72,9 +72,3 @@ python main.py \
 
 ---
 
-## Citation
-
-Citation information will be updated after publication.
-
----
-
