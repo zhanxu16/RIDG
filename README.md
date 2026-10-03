@@ -68,7 +68,7 @@ The pretrained RIDG-Diff model can be downloaded from Baidu Netdisk:
 
 ## Testing
 
-Before testing, please download the dataset and pretrained model, and configure their local paths in the corresponding YAML file.
+Before testing, please download the dataset and pretrained model, and update the corresponding paths in the YAML configuration file.
 
 Run the following command from the project root:
 
