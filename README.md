@@ -3,13 +3,11 @@
 
 Code repository for **RIDG-Diff: Reference-to-Input Discrepancy-Guided Mean-Reverting Diffusion for Multitemporal Cloud Removal**.
 
-The complete code and pretrained models will be released after publication.
-
 ---
 
 ## Environment
 
-The code was tested with the following environment:
+The code was trained and tested with the following environment:
 
 | Component | Version |
 |---|---|
