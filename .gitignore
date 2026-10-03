@@ -1,0 +1,37 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+.vscode/
+
+# Nano / Vim temporary files
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+lightning_logs/
+wandb/
+
+# Model checkpoints
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+
+# Dataset
+/data/
+/datasets/
+/dataset/
+
+# Outputs
+outputs/
+results/
+
+# System
+.DS_Store

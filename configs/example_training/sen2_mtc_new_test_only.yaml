@@ -1,0 +1,194 @@
+# Test-only configuration for RIDG-Diff on Sen2_MTC_New.
+# This file keeps the model definition required for checkpoint loading,
+# while removing train/validation/predict dataset entries and training callbacks.
+#
+# Before testing, place:
+#   1) the trained checkpoint at ./checkpoints/ridg_diff_sen2_mtc_new.ckpt
+#   2) the Sen2_MTC_New test split under ./data/Sen2_MTC/test
+#   3) the precomputed composite references under
+#      ./data/Sen2_MTC/test/selector_soft_generated
+
+model:
+  # Retained because the current main.py reads this field even in test mode.
+  base_learning_rate: 2.0e-05
+
+  target: sgm.models.diffusion.TemporalResidualDiffusionEngine
+  params:
+    input_key: gt_image
+    mean_key: raw_image
+    image_path_key: path
+    compile_model: false
+    use_ema: true
+    use_flash_attn2: false
+
+    # Public checkpoint path. Replace this path if the checkpoint is stored elsewhere.
+    ckpt_path: /media/zx/data2/zx/EMRDM-main111/ours_ckpt/ournew/sen_new.ckpt
+
+    sigma_st_config:
+      target: sgm.modules.diffusionmodules.sigma2st.EDMSigma2St
+      params:
+        alpha: 3.0
+
+    denoiser_config:
+      target: sgm.modules.diffusionmodules.denoiser.TemporalResidualDenoiser
+      params:
+        scaling_config:
+          target: sgm.modules.diffusionmodules.denoiser_scaling.TemporalResidualEDMScaling
+          params:
+            sigma_input: 1.0
+            sigma_mu: 1.0
+
+    network_wrapper: sgm.modules.diffusionmodules.wrappers.TemporalCloudRemovalWrapper
+
+    network_config:
+      target: sgm.modules.diffusionmodules.k_diffusion.image_transformer.ImageTemporalTransformerDenoiserInterface
+      params:
+        in_channels: 11
+        out_channels: 3
+
+        patch_size:
+          - 4
+          - 4
+
+        widths:
+          - 256
+          - 512
+          - 768
+
+        depths:
+          - 2
+          - 2
+          - 16
+
+        d_ffs:
+          - 512
+          - 1024
+          - 1536
+
+        self_attns:
+          - type: neighborhood
+            d_head: 64
+            kernel_size: 7
+          - type: neighborhood
+            d_head: 64
+            kernel_size: 7
+          - type: fdam-global
+            d_head: 64
+            fdam_lf: true
+            fdam_hf: true
+            fdam_init: 1.0e-05
+
+        dropout_rate:
+          - 0.0
+          - 0.0
+          - 0.0
+
+        mapping_depth: 2
+        mapping_width: 768
+        mapping_d_ff: 1536
+        mapping_dropout_rate: 0.1
+
+        temporal_n_heads: 16
+        temporal_d_model: 768
+        temporal_d_k: 48
+        temporal_positional_encoding: false
+        temporal_agg_mode: att_group
+        temporal_dropout: 0.0
+        temporal_mlp:
+          - 768
+          - 1536
+
+        pad_value: 0
+        tanh: false
+
+        use_hint_gate: true
+        hint_channels: 4
+        hint_gate_init: 0.1
+        hint_zero_init: true
+
+    conditioner_config:
+      target: sgm.modules.GeneralConditioner
+      params:
+        emb_models:
+          - is_trainable: true
+            input_key: cond_image
+            ucg_rate: 0.0
+            target: sgm.modules.encoders.modules.IndentityEmbedder
+
+    first_stage_config:
+      target: sgm.models.autoencoder.IdentityFirstStage
+
+    # Retained for compatibility with the current
+    # TemporalResidualDiffusionEngine constructor.
+    # It is not used to train the model when running with "-t false".
+    loss_fn_config:
+      target: sgm.modules.diffusionmodules.loss.TemporalResidualDiffusionLoss
+      params:
+        loss_weighting_config:
+          target: sgm.modules.diffusionmodules.loss_weighting.TemporalResidualEDMWeighting
+          params:
+            sigma_input: 1.0
+            sigma_mu: 1.0
+        sigma_sampler_config:
+          target: sgm.modules.diffusionmodules.sigma_sampling.EDMSampling
+          params:
+            p_mean: -1.4
+            p_std: 1.4
+
+    sampler_config:
+      target: sgm.modules.diffusionmodules.sampling.TemporalResidualEulerEDMSampler
+      params:
+        num_steps: 7
+        discretization_config:
+          target: sgm.modules.diffusionmodules.discretizer.EDMDiscretization
+          params:
+            sigma_min: 0.001
+            sigma_max: 100.0
+
+    to_rgb_config:
+      target: sgm.util.S1andS2_to_rgb
+
+    scale_01_config:
+      target: sgm.util.sen_mtc_scale_01
+
+
+data:
+  target: sgm.data.base.DataModuleFromConfig
+  params:
+    batch_size: 8
+    num_workers: 2
+    wrap: true
+
+    # Test split only.
+    test:
+      target: sgm.data.sen2_mtc_new.sen2_mtc_new.Sen2_MTC_New_Multi
+      params:
+        data_root: "/media/zx/data2/zx/EMRDM-main/data/Sen2_MTC/test"
+        selector_soft_root: "/media/zx/data2/zx/EMRDM-main/data/Sen2_MTC/test/selector_soft_generated"
+        use_ir: true
+        mode: test
+        selector_soft_mode: condition_only_masked_residual_hint
+        selector_soft_required: true
+        multi_temporal: 3
+        mono_temporal: -1
+
+
+lightning:
+  # Keep the image logger disabled so test-only execution does not
+  # invoke the visualization callback from main.py.
+  callbacks:
+    image_logger:
+      target: main.ImageLogger
+      params:
+        enable_autocast: false
+        disabled: true
+        batch_frequency: 1000
+        max_images: 6
+        increase_log_steps: true
+        log_first_step: false
+
+  trainer:
+    # Preserved from the working configuration to minimize behavioral changes.
+    # Reviewers can change this to match their available GPU setup.
+    devices: "0,"
+    benchmark: true
