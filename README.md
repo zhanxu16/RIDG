@@ -83,7 +83,7 @@ Run the following command from the project root:
 
 ```bash
 python main.py \
-    --base configs/example_training/sen2_mtc_new_test_only.yaml \
+    --base configs/example_training/sen2_mtc_new.yaml \
     --enable_tf32 \
     -t false
 ```
