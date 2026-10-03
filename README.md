@@ -41,7 +41,7 @@ pip install -r requirements.txt
 
 ## Datasets
 
-The datasets used in our experiments can be downloaded from the following links. Please follow the original repositories for dataset download and preparation.
+The datasets used in our experiments can be downloaded from the following links. Please refer to the corresponding source pages for download instructions and data preparation.
 
 ### Sen2_MTC_New
 
@@ -57,6 +57,15 @@ https://github.com/XavierJiezou/PMAA
 
 ---
 
+##  Composite References
+
+The  composite references required for testing on Sen2_MTC_New can be downloaded from Baidu Netdisk:
+
+- Link: https://pan.baidu.com/s/1jmlJfohCOXtvGCy6qAKaLQ?pwd=kcgs
+- Extraction code: `kcgs`
+
+---
+
 ## Pretrained Models
 
 The pretrained RIDG-Diff model can be downloaded from Baidu Netdisk:
@@ -68,7 +77,7 @@ The pretrained RIDG-Diff model can be downloaded from Baidu Netdisk:
 
 ## Testing
 
-Before testing, please download the dataset and pretrained model, and update the corresponding paths in the YAML configuration file.
+Before testing, please download the dataset, composite references, and pretrained model, and update the corresponding paths in the YAML configuration file.
 
 Run the following command from the project root:
 
@@ -78,6 +87,4 @@ python main.py \
     --enable_tf32 \
     -t false
 ```
-
 ---
-
