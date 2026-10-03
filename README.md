@@ -41,6 +41,8 @@ pip install -r requirements.txt
 
 ## Datasets
 
+The datasets used in our experiments can be downloaded from the following links. Please follow the original repositories for dataset download and preparation.
+
 ### Sen2_MTC_New
 
 Dataset link:
@@ -65,6 +67,10 @@ The pretrained RIDG-Diff model can be downloaded from Baidu Netdisk:
 ---
 
 ## Testing
+
+Before testing, please download the dataset and pretrained model, and configure their local paths in the corresponding YAML file.
+
+Run the following command from the project root:
 
 ```bash
 python main.py \
