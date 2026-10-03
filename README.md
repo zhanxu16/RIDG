@@ -1,4 +1,3 @@
-# RIDG
 
 # RIDG-Diff
 
